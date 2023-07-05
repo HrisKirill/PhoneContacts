@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.phonecontacts.mapper.ContactDtoToContactMapper.convertDtoContact;
+
 @RestController
 @RequestMapping("/contacts")
 public class ContactController {
@@ -34,10 +36,8 @@ public class ContactController {
         String login = authentication.getName();
         Optional<User> userOptional = userDao.findByUsernameOrEmail(login, login);
         User user = userOptional.orElseGet(userOptional::orElseThrow);
-        Contact contact = ContactDtoToContactMapper.convertDtoContact(contactDto, user);
-        Contact savedContact = dao.create(contact);
 
-        return new ResponseEntity<>(savedContact, HttpStatus.OK);
+        return new ResponseEntity<>(dao.create(convertDtoContact(contactDto, user)), HttpStatus.OK);
     }
 
     @PutMapping

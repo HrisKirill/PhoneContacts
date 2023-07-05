@@ -1,3 +1,4 @@
+/*
 package com.example.phonecontacts.dao.services;
 
 import com.example.phonecontacts.dao.interfaces.IContactPhoneNumberDao;
@@ -65,3 +66,4 @@ public class ContactPhoneNumberService implements IContactPhoneNumberDao {
         return repository.findAll();
     }
 }
+*/

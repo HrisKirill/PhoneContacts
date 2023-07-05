@@ -27,9 +27,11 @@ public class Contact {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "contact")
+    @ElementCollection
+    @CollectionTable(name = "contact_emails", joinColumns = @JoinColumn(name = "contact_id"))
     private Set<ContactEmail> emails;
 
-    @OneToMany(mappedBy = "contact")
+    @ElementCollection
+    @CollectionTable(name = "contact_phones", joinColumns = @JoinColumn(name = "contact_id"))
     private Set<ContactPhoneNumber> phones;
 }

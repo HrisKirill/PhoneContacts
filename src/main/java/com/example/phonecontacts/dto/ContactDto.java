@@ -9,7 +9,7 @@ public class ContactDto {
 
     private String name;
 
-    private Set<ContactEmailDto> emails;
+    private Set<String> emails;
 
-    private Set<ContactPhoneNumberDto> phones;
+    private Set<String> phones;
 }

@@ -1,8 +1,6 @@
 package com.example.phonecontacts.mapper;
 
 import com.example.phonecontacts.dto.ContactDto;
-import com.example.phonecontacts.dto.ContactEmailDto;
-import com.example.phonecontacts.dto.ContactPhoneNumberDto;
 import com.example.phonecontacts.entities.Contact;
 import com.example.phonecontacts.entities.ContactEmail;
 import com.example.phonecontacts.entities.ContactPhoneNumber;
@@ -22,27 +20,21 @@ public class ContactDtoToContactMapper {
                 .build();
     }
 
-    private static Set<ContactEmail> convertDtoToContactEmail(Set<ContactEmailDto> emailDtos) {
+    private static Set<ContactEmail> convertDtoToContactEmail(Set<String> emailDtos) {
         Set<ContactEmail> emails = new HashSet<>();
-        for (ContactEmailDto emailDto :
+        for (String email :
                 emailDtos) {
-            emails.add(ContactEmail.builder()
-                    .email(emailDto.getEmail())
-                    .build());
+            emails.add(new ContactEmail(email));
         }
-        System.out.println("emails: " + emails);
         return emails;
     }
 
-    private static Set<ContactPhoneNumber> convertDtoToContactPhoneNumber(Set<ContactPhoneNumberDto> numberDtos) {
+    private static Set<ContactPhoneNumber> convertDtoToContactPhoneNumber(Set<String> numberDtos) {
         Set<ContactPhoneNumber> phoneNumbers = new HashSet<>();
-        for (ContactPhoneNumberDto numberDto :
+        for (String phoneNumber :
                 numberDtos) {
-            phoneNumbers.add(ContactPhoneNumber.builder()
-                    .phoneNumber(numberDto.getPhoneNumber())
-                    .build());
+            phoneNumbers.add(new ContactPhoneNumber(phoneNumber));
         }
-        System.out.println("phoneNumbers: " + phoneNumbers);
         return phoneNumbers;
     }
 }

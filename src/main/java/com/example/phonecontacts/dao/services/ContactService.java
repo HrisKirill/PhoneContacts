@@ -1,12 +1,8 @@
 package com.example.phonecontacts.dao.services;
 
 import com.example.phonecontacts.dao.interfaces.IContactDao;
-import com.example.phonecontacts.dao.interfaces.IContactEmailDao;
-import com.example.phonecontacts.dao.interfaces.IContactPhoneNumberDao;
 import com.example.phonecontacts.dao.repositories.ContactRepository;
 import com.example.phonecontacts.entities.Contact;
-import com.example.phonecontacts.entities.ContactEmail;
-import com.example.phonecontacts.entities.ContactPhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,18 +11,11 @@ import java.util.Optional;
 
 @Service
 public class ContactService implements IContactDao {
-
-    private final IContactEmailDao contactEmailDao;
-    private final IContactPhoneNumberDao contactPhoneNumberDao;
     private final ContactRepository contactRepository;
 
 
     @Autowired
-    public ContactService(IContactEmailDao contactEmailDao,
-                          IContactPhoneNumberDao contactPhoneNumberDao,
-                          ContactRepository contactRepository) {
-        this.contactEmailDao = contactEmailDao;
-        this.contactPhoneNumberDao = contactPhoneNumberDao;
+    public ContactService(ContactRepository contactRepository) {
         this.contactRepository = contactRepository;
     }
 
@@ -34,7 +23,6 @@ public class ContactService implements IContactDao {
     public Contact create(Contact entity) {
         Optional<Contact> contactOptional = contactRepository.findByName(entity.getName());
         if (contactOptional.isEmpty()) {
-
             return contactRepository.save(entity);
         } else {
             throw new IllegalArgumentException("Contact is already created");

@@ -1,3 +1,4 @@
+/*
 package com.example.phonecontacts.dao.repositories;
 
 import com.example.phonecontacts.entities.ContactEmail;
@@ -10,3 +11,4 @@ import java.util.Optional;
 public interface ContactEmailRepository extends JpaRepository<ContactEmail, Long> {
     Optional<ContactEmail> findByEmail(String email);
 }
+*/
