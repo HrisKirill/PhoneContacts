@@ -35,7 +35,7 @@ public class AuthService implements IAuth {
     @Override
     public String login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(), loginDto.getPassword()));
+                loginDto.getLogin(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return "User signed-in successfully!";
