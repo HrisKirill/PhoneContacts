@@ -20,7 +20,7 @@ public class UserService implements IUserDao {
 
     @Override
     public User create(User entity) {
-        Optional<User> optionalUser = repository.findById(entity.getId());
+        Optional<User> optionalUser = repository.findUserByUserNameOrEmail(entity.getUserName(),entity.getEmail());
         if (optionalUser.isEmpty()) {
             return repository.save(entity);
         } else {
@@ -35,7 +35,8 @@ public class UserService implements IUserDao {
 
             User target = optionalUser.get();
             target.setName(entity.getName());
-            target.setLogin(entity.getLogin());
+            target.setUserName(entity.getUserName());
+            target.setEmail(entity.getEmail());
             target.setPassword(entity.getPassword());
             target.setContacts(entity.getContacts());
 
@@ -65,5 +66,20 @@ public class UserService implements IUserDao {
     @Override
     public List<User> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Optional<User> findByUsernameOrEmail(String username, String email) {
+        return repository.findUserByUserNameOrEmail(username, email);
+    }
+
+    @Override
+    public Boolean existsByUsername(String username) {
+        return repository.existsByUserName(username);
+    }
+
+    @Override
+    public Boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
     }
 }
