@@ -1,8 +1,11 @@
 package com.example.phonecontacts.dao.services;
 
 import com.example.phonecontacts.dao.interfaces.IContactDao;
+import com.example.phonecontacts.dao.interfaces.IContactEmailDao;
+import com.example.phonecontacts.dao.interfaces.IContactPhoneNumberDao;
 import com.example.phonecontacts.dao.repositories.ContactRepository;
 import com.example.phonecontacts.entities.Contact;
+import com.example.phonecontacts.entities.ContactEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +15,23 @@ import java.util.Optional;
 @Service
 public class ContactService implements IContactDao {
 
+    private final IContactEmailDao contactEmailDao;
+    private final IContactPhoneNumberDao contactPhoneNumberDao;
     private final ContactRepository repository;
 
+
     @Autowired
-    public ContactService(ContactRepository repository) {
+    public ContactService(IContactEmailDao contactEmailDao,
+                          IContactPhoneNumberDao contactPhoneNumberDao,
+                          ContactRepository repository) {
+        this.contactEmailDao = contactEmailDao;
+        this.contactPhoneNumberDao = contactPhoneNumberDao;
         this.repository = repository;
     }
 
     @Override
     public Contact create(Contact entity) {
-        Optional<Contact> contactOptional = repository.findById(entity.getId());
+        Optional<Contact> contactOptional = repository.findByName(entity.getName());
         if (contactOptional.isEmpty()) {
             return repository.save(entity);
         } else {
@@ -37,8 +47,8 @@ public class ContactService implements IContactDao {
             Contact target = contactOptional.get();
             target.setUser(entity.getUser());
             target.setName(entity.getName());
-            target.setContactEmailList(entity.getContactEmailList());
-            target.setContactPhoneNumbers(entity.getContactPhoneNumbers());
+            target.setEmails(entity.getEmails());
+            target.setPhones(entity.getPhones());
 
             return repository.save(target);
         } else {

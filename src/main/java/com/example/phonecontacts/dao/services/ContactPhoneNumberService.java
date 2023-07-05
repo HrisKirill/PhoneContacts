@@ -1,6 +1,6 @@
 package com.example.phonecontacts.dao.services;
 
-import com.example.phonecontacts.dao.interfaces.IContactPhoneNumber;
+import com.example.phonecontacts.dao.interfaces.IContactPhoneNumberDao;
 import com.example.phonecontacts.dao.repositories.ContactPhoneNumberRepository;
 import com.example.phonecontacts.entities.ContactPhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ContactPhoneNumberService implements IContactPhoneNumber {
+public class ContactPhoneNumberService implements IContactPhoneNumberDao {
 
     private final ContactPhoneNumberRepository repository;
 
@@ -21,7 +21,7 @@ public class ContactPhoneNumberService implements IContactPhoneNumber {
 
     @Override
     public ContactPhoneNumber create(ContactPhoneNumber entity) {
-        Optional<ContactPhoneNumber> contactPhoneNumberOptional = repository.findById(entity.getId());
+        Optional<ContactPhoneNumber> contactPhoneNumberOptional = repository.findByPhoneNumber(entity.getPhoneNumber());
         if (contactPhoneNumberOptional.isEmpty()) {
             return repository.save(entity);
         } else {

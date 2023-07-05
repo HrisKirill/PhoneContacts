@@ -21,7 +21,7 @@ public class ContactEmailService implements IContactEmailDao {
 
     @Override
     public ContactEmail create(ContactEmail entity) {
-        Optional<ContactEmail> contactEmailOptional = repository.findById(entity.getId());
+        Optional<ContactEmail> contactEmailOptional = repository.findByEmail(entity.getEmail());
         if (contactEmailOptional.isEmpty()) {
             return repository.save(entity);
         } else {
