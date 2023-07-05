@@ -2,10 +2,12 @@ package com.example.phonecontacts.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -14,7 +16,7 @@ public class ContactPhoneNumber {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "phone_number", unique = true)
+    @Column(name = "phone_number", nullable = false, unique= true)
     private String phoneNumber;
 
     @ManyToOne

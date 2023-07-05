@@ -6,6 +6,7 @@ import com.example.phonecontacts.dao.interfaces.IContactPhoneNumberDao;
 import com.example.phonecontacts.dao.repositories.ContactRepository;
 import com.example.phonecontacts.entities.Contact;
 import com.example.phonecontacts.entities.ContactEmail;
+import com.example.phonecontacts.entities.ContactPhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,23 +18,24 @@ public class ContactService implements IContactDao {
 
     private final IContactEmailDao contactEmailDao;
     private final IContactPhoneNumberDao contactPhoneNumberDao;
-    private final ContactRepository repository;
+    private final ContactRepository contactRepository;
 
 
     @Autowired
     public ContactService(IContactEmailDao contactEmailDao,
                           IContactPhoneNumberDao contactPhoneNumberDao,
-                          ContactRepository repository) {
+                          ContactRepository contactRepository) {
         this.contactEmailDao = contactEmailDao;
         this.contactPhoneNumberDao = contactPhoneNumberDao;
-        this.repository = repository;
+        this.contactRepository = contactRepository;
     }
 
     @Override
     public Contact create(Contact entity) {
-        Optional<Contact> contactOptional = repository.findByName(entity.getName());
+        Optional<Contact> contactOptional = contactRepository.findByName(entity.getName());
         if (contactOptional.isEmpty()) {
-            return repository.save(entity);
+
+            return contactRepository.save(entity);
         } else {
             throw new IllegalArgumentException("Contact is already created");
         }
@@ -41,7 +43,7 @@ public class ContactService implements IContactDao {
 
     @Override
     public Contact update(Contact entity) {
-        Optional<Contact> contactOptional = repository.findById(entity.getId());
+        Optional<Contact> contactOptional = contactRepository.findById(entity.getId());
         if (contactOptional.isPresent()) {
 
             Contact target = contactOptional.get();
@@ -50,7 +52,7 @@ public class ContactService implements IContactDao {
             target.setEmails(entity.getEmails());
             target.setPhones(entity.getPhones());
 
-            return repository.save(target);
+            return contactRepository.save(target);
         } else {
             throw new IllegalArgumentException("Unable to update contact");
         }
@@ -58,14 +60,14 @@ public class ContactService implements IContactDao {
 
     @Override
     public Optional<Contact> getById(Long id) {
-        return repository.findById(id);
+        return contactRepository.findById(id);
     }
 
     @Override
     public String delete(Long entityId) {
-        Optional<Contact> contactOptional = repository.findById(entityId);
+        Optional<Contact> contactOptional = contactRepository.findById(entityId);
         if (contactOptional.isPresent()) {
-            repository.delete(contactOptional.get());
+            contactRepository.delete(contactOptional.get());
             return "Contact with id + " + entityId + " deleted successfully";
         } else {
             throw new IllegalArgumentException("Unable to delete contact");
@@ -74,6 +76,6 @@ public class ContactService implements IContactDao {
 
     @Override
     public List<Contact> findAll() {
-        return repository.findAll();
+        return contactRepository.findAll();
     }
 }

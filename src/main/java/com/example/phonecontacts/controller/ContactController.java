@@ -4,6 +4,7 @@ import com.example.phonecontacts.dao.interfaces.IContactDao;
 import com.example.phonecontacts.dao.interfaces.IUserDao;
 import com.example.phonecontacts.dto.ContactDto;
 import com.example.phonecontacts.entities.Contact;
+import com.example.phonecontacts.entities.ContactEmail;
 import com.example.phonecontacts.entities.User;
 import com.example.phonecontacts.mapper.ContactDtoToContactMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,9 @@ public class ContactController {
         Optional<User> userOptional = userDao.findByUsernameOrEmail(login, login);
         User user = userOptional.orElseGet(userOptional::orElseThrow);
         Contact contact = ContactDtoToContactMapper.convertDtoContact(contactDto, user);
-        return new ResponseEntity<>(dao.create(contact), HttpStatus.OK);
+        Contact savedContact = dao.create(contact);
+
+        return new ResponseEntity<>(savedContact, HttpStatus.OK);
     }
 
     @PutMapping
