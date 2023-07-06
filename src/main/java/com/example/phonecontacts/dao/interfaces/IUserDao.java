@@ -8,4 +8,6 @@ public interface IUserDao extends Dao<User> {
     Optional<User> findByUsernameOrEmail(String username, String email);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
+
+    User  getCurrentUser();
 }

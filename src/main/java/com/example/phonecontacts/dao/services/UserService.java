@@ -4,6 +4,8 @@ import com.example.phonecontacts.dao.interfaces.IUserDao;
 import com.example.phonecontacts.dao.repositories.UserRepository;
 import com.example.phonecontacts.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class UserService implements IUserDao {
 
     @Override
     public User create(User entity) {
-        Optional<User> optionalUser = repository.findUserByUserNameOrEmail(entity.getUserName(),entity.getEmail());
+        Optional<User> optionalUser = repository.findUserByUserNameOrEmail(entity.getUserName(), entity.getEmail());
         if (optionalUser.isEmpty()) {
             return repository.save(entity);
         } else {
@@ -81,5 +83,18 @@ public class UserService implements IUserDao {
     @Override
     public Boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        Optional<User> currentUser = repository.findUserByUserNameOrEmail(currentPrincipalName, currentPrincipalName);
+        if (currentUser.isPresent()) {
+            return currentUser.get();
+        } else {
+            throw new IllegalArgumentException("User does not exist");
+        }
+
     }
 }
