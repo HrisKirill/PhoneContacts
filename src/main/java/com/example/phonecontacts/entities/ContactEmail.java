@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Embeddable
 public class ContactEmail {
-    @Email
+    @Email(message = "Invalid email")
     private String email;
 }

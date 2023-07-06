@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Embeddable
 public class ContactPhoneNumber {
-    @Pattern(regexp = "\\+380\\d{9}")
+    @Pattern(regexp = "\\+380\\d{9}", message = "Invalid phone number")
     private String phoneNumber;
 }
