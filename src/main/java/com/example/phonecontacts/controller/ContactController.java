@@ -4,17 +4,13 @@ import com.example.phonecontacts.dao.interfaces.IContactDao;
 import com.example.phonecontacts.dao.interfaces.IUserDao;
 import com.example.phonecontacts.dto.ContactDto;
 import com.example.phonecontacts.entities.Contact;
-import com.example.phonecontacts.entities.ContactEmail;
-import com.example.phonecontacts.entities.User;
-import com.example.phonecontacts.mapper.ContactDtoToContactMapper;
+import com.example.phonecontacts.mapper.ContactToContactDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.example.phonecontacts.mapper.ContactDtoToContactMapper.convertDtoContact;
 
@@ -32,17 +28,16 @@ public class ContactController {
     }
 
     @PostMapping
-    ResponseEntity<Contact> createContact(@RequestBody ContactDto contactDto, Authentication authentication) {
-        String login = authentication.getName();
-        Optional<User> userOptional = userDao.findByUsernameOrEmail(login, login);
-        User user = userOptional.orElseGet(userOptional::orElseThrow);
-
-        return new ResponseEntity<>(dao.create(convertDtoContact(contactDto, user)), HttpStatus.OK);
+    ResponseEntity<Contact> createContact(@RequestBody ContactDto contactDto) {
+        return new ResponseEntity<>(dao.create(convertDtoContact(contactDto,
+                userDao.getCurrentUser())), HttpStatus.OK);
     }
 
     @PutMapping
-    ResponseEntity<Contact> updateContact(@RequestBody Contact contact) {
-        return new ResponseEntity<>(dao.update(contact), HttpStatus.OK);
+    ResponseEntity<Contact> updateContact(@RequestBody ContactDto contactDto) {
+
+        return new ResponseEntity<>(dao.update(convertDtoContact(contactDto,
+                userDao.getCurrentUser())), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -51,7 +46,9 @@ public class ContactController {
     }
 
     @GetMapping("/all")
-    ResponseEntity<List<Contact>> getAllContacts() {
-        return new ResponseEntity<>(dao.findAll(), HttpStatus.OK);
+    ResponseEntity<List<ContactDto>> getAllContacts() {
+        return new ResponseEntity<>(dao.findAll().stream()
+                .map(ContactToContactDto::contactToContactDto)
+                .toList(), HttpStatus.OK);
     }
 }
