@@ -1,6 +1,7 @@
 package com.example.phonecontacts.entities;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Embeddable
 public class ContactEmail {
+    @Email
     private String email;
 }

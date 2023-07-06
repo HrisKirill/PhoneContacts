@@ -1,6 +1,8 @@
 package com.example.phonecontacts.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,14 +26,15 @@ public class Contact {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", updatable = false)
+    @JsonIgnore
     private User user;
 
     @ElementCollection
     @CollectionTable(name = "contact_emails", joinColumns = @JoinColumn(name = "contact_id"))
-    private Set<ContactEmail> emails;
+    private Set<@Valid ContactEmail> emails;
 
     @ElementCollection
     @CollectionTable(name = "contact_phones", joinColumns = @JoinColumn(name = "contact_id"))
-    private Set<ContactPhoneNumber> phones;
+    private Set<@Valid ContactPhoneNumber> phones;
 }
