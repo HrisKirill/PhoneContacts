@@ -3,9 +3,6 @@ package com.example.phonecontacts.dao.services;
 import com.example.phonecontacts.dao.repositories.ContactRepository;
 import com.example.phonecontacts.dao.repositories.UserRepository;
 import com.example.phonecontacts.entities.Contact;
-import com.example.phonecontacts.entities.ContactEmail;
-import com.example.phonecontacts.entities.ContactPhoneNumber;
-import com.example.phonecontacts.entities.User;
 import com.example.phonecontacts.exceptions.DuplicateException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.example.phonecontacts.constants.TestConstants.getTestContact;
 import static com.example.phonecontacts.constants.TestConstants.getTestUser;

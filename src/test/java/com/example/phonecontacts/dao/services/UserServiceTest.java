@@ -1,7 +1,6 @@
 package com.example.phonecontacts.dao.services;
 
 import com.example.phonecontacts.dao.repositories.UserRepository;
-import com.example.phonecontacts.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
