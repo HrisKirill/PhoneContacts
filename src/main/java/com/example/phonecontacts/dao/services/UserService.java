@@ -59,7 +59,7 @@ public class UserService implements IUserDao {
         Optional<User> optionalUser = repository.findById(entityId);
         if (optionalUser.isPresent()) {
             repository.delete(optionalUser.get());
-            return "User with id + " + entityId + " deleted successfully";
+            return "User with id " + entityId + " deleted successfully";
         } else {
             throw new IllegalArgumentException("Unable to delete event");
         }
