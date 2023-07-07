@@ -28,25 +28,25 @@ public class ContactController {
     }
 
     @PostMapping
-    ResponseEntity<Contact> createContact(@RequestBody ContactDto contactDto) {
+    public ResponseEntity<Contact> createContact(@RequestBody ContactDto contactDto) {
         return new ResponseEntity<>(dao.create(convertDtoContact(contactDto,
                 userDao.getCurrentUser())), HttpStatus.OK);
     }
 
     @PutMapping
-    ResponseEntity<Contact> updateContact(@RequestBody ContactDto contactDto) {
+    public ResponseEntity<Contact> updateContact(@RequestBody ContactDto contactDto) {
 
         return new ResponseEntity<>(dao.update(convertDtoContact(contactDto,
                 userDao.getCurrentUser())), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<String> deleteContact(@PathVariable Long id) {
+    public ResponseEntity<String> deleteContact(@PathVariable Long id) {
         return new ResponseEntity<>(dao.delete(id), HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    ResponseEntity<List<ContactDto>> getAllContacts() {
+    public ResponseEntity<List<ContactDto>> getAllContacts() {
         return new ResponseEntity<>(dao.findAll().stream()
                 .map(ContactToContactDto::contactToContactDto)
                 .toList(), HttpStatus.OK);
