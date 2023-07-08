@@ -31,7 +31,7 @@ public class UserService implements IUserDao {
     }
 
     @Override
-    public User update(User entity) {
+    public User update(User entity, Long entityId) {
         Optional<User> optionalUser = repository.findById(entity.getId());
         if (optionalUser.isPresent()) {
 

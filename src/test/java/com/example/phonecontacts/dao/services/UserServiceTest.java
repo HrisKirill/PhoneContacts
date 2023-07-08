@@ -52,13 +52,13 @@ class UserServiceTest {
     void updateTest() {
         when(userRepository.findById(getTestUser().getId())).thenReturn(Optional.of(getTestUser()));
         when(userRepository.save(getTestUser())).thenReturn(getTestUser());
-        assertEquals(getTestUser(), userService.update(getTestUser()));
+        assertEquals(getTestUser(), userService.update(getTestUser(), getTestUser().getId()));
     }
 
     @Test
     void updateBadTest() {
         when(userRepository.findById(getTestUser().getId())).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> userService.update(getTestUser()));
+        assertThrows(IllegalArgumentException.class, () -> userService.update(getTestUser(), getTestUser().getId()));
     }
 
     @Test

@@ -48,8 +48,8 @@ public class ContactService implements IContactDao {
 
 
     @Override
-    public Contact update(Contact entity) {
-        Optional<Contact> contactOptional = contactRepository.findByName(entity.getName());
+    public Contact update(Contact entity, Long entityID) {
+        Optional<Contact> contactOptional = getById(entityID);
         if (contactOptional.isPresent() &&
                 contactRepository.existsContactByUser(userDao.getCurrentUser())) {
             List<Contact> contacts = findAll();
@@ -76,14 +76,20 @@ public class ContactService implements IContactDao {
 
     @Override
     public Optional<Contact> getById(Long id) {
-        return contactRepository.findById(id);
+        List<Contact> contacts = findAll();
+        int resultId = Math.toIntExact(id) - 1;
+        if (!contacts.isEmpty() && resultId >= 0 && resultId < contacts.size()) {
+            return Optional.of(contacts.get(resultId));
+        }
+
+        return Optional.empty();
     }
 
     @Override
     public String delete(Long entityId) {
         List<Contact> contacts = findAll();
         int id = Math.toIntExact(entityId) - 1;
-        if (!contacts.isEmpty() && id < contacts.size()) {
+        if (!contacts.isEmpty() && id >= 0 && id < contacts.size()) {
             contactRepository.delete(contacts.get(id));
             return "Contact with id " + entityId + " deleted successfully";
         } else {

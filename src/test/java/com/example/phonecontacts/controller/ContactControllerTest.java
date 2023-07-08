@@ -64,9 +64,9 @@ class ContactControllerTest {
 
     @Test
     void updateContactTest() throws Exception {
-        given(contactDao.update(getTestContact())).willReturn(getTestContact());
+        given(contactDao.update(getTestContact(), getTestContact().getId())).willReturn(getTestContact());
         mockMvc.perform(
-                        put("/contacts")
+                        put("/contacts/{id}",getTestContact().getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(getContactDto())))
                 .andExpect(status().isOk());

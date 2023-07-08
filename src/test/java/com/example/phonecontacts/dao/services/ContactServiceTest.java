@@ -69,13 +69,16 @@ class ContactServiceTest {
 
 
     @Test
-    void updateTest(){
+    void updateTest() {
         setUpAuthentication();
-        when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.of(getTestContact()));
+        when(contactRepository.findAllByUser(getTestUser())).thenReturn(List.of(getTestContact()));
+
+//        when(contactRepository.findAll()).thenReturn(List.of(getTestContact()));
+        when(contactRepository.findById(getTestContact().getId())).thenReturn(Optional.of(getTestContact()));
         when(contactRepository.existsContactByUser(getTestUser())).thenReturn(true);
         when(contactRepository.findAll()).thenReturn(Collections.emptyList());
         when(contactRepository.save(getTestContact())).thenReturn(getTestContact());
-        assertEquals(getTestContact(), contactService.update(getTestContact()));
+        assertEquals(getTestContact(), contactService.update(getTestContact(), getTestContact().getId()));
     }
 
     @Test
@@ -86,32 +89,41 @@ class ContactServiceTest {
         when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.of(getTestContact()));
         when(contactRepository.existsContactByUser(getTestUser())).thenReturn(true);
         when(contactRepository.findAllByUser(getTestUser())).thenReturn(List.of(contact));
-        assertThrows(DuplicateException.class, () -> contactService.update(getTestContact()));
+        assertThrows(DuplicateException.class, () -> contactService.update(getTestContact(), getTestContact().getId()));
         contact.setEmails(Collections.emptySet());
-        assertThrows(DuplicateException.class, () -> contactService.update(getTestContact()));
+        assertThrows(DuplicateException.class, () -> contactService.update(getTestContact(), getTestContact().getId()));
         when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.empty());
         contact.setPhones(Collections.emptySet());
-        assertThrows(IllegalArgumentException.class, () -> contactService.update(getTestContact()));
+        assertThrows(IllegalArgumentException.class, () -> contactService.update(getTestContact(), 0L));
     }
 
     @Test
-    void deleteTest(){
+    void deleteTest() {
         setUpAuthentication();
         when(contactRepository.findAllByUser(getTestUser())).thenReturn(List.of(getTestContact()));
-        assertEquals("Contact with id 1 deleted successfully",contactService.delete(getTestContact().getId()));
+        assertEquals("Contact with id 1 deleted successfully", contactService.delete(getTestContact().getId()));
     }
 
     @Test
-    void deleteBadTest(){
+    void deleteBadTest() {
         setUpAuthentication();
         when(contactRepository.findAllByUser(getTestUser())).thenReturn(Collections.emptyList());
-        assertThrows(IllegalArgumentException.class,()-> contactService.delete(getTestContact().getId()));
+        assertThrows(IllegalArgumentException.class, () -> contactService.delete(getTestContact().getId()));
     }
 
 
     @Test
     void getByIdTest() {
-        when(contactService.getById(getTestContact().getId())).thenReturn(Optional.of(getTestContact()));
+        setUpAuthentication();
+        when(contactRepository.findAllByUser(getTestUser())).thenReturn(List.of(getTestContact()));
+        assertEquals(Optional.of(getTestContact()), contactService.getById(1L));
+    }
+
+    @Test
+    void getByIdBadTest() {
+        setUpAuthentication();
+        when(contactRepository.findAllByUser(getTestUser())).thenReturn(Collections.emptyList());
+        assertEquals(Optional.empty(), contactService.getById(1L));
     }
 
 

@@ -7,7 +7,7 @@ public interface Dao<E> {
 
     E create(E entity);
 
-    E update(E entity);
+    E update(E entity,Long entityId);
 
     Optional<E> getById(Long id);
 

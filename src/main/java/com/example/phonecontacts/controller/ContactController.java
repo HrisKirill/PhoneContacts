@@ -33,11 +33,10 @@ public class ContactController {
                 userDao.getCurrentUser())), HttpStatus.OK);
     }
 
-    @PutMapping
-    public ResponseEntity<Contact> updateContact(@RequestBody ContactDto contactDto) {
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Contact> updateContact(@RequestBody ContactDto contactDto,@PathVariable Long id) {
         return new ResponseEntity<>(dao.update(convertDtoContact(contactDto,
-                userDao.getCurrentUser())), HttpStatus.OK);
+                userDao.getCurrentUser()),id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
