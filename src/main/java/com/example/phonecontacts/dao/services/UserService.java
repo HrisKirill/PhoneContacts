@@ -15,6 +15,7 @@ import java.util.Optional;
 public class UserService implements IUserDao {
     private final UserRepository repository;
 
+
     @Autowired
     public UserService(UserRepository repository) {
         this.repository = repository;
@@ -83,6 +84,11 @@ public class UserService implements IUserDao {
     @Override
     public Boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return repository.findUserByEmail(email);
     }
 
     @Override

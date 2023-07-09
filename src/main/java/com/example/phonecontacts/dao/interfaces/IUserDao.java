@@ -6,8 +6,12 @@ import java.util.Optional;
 
 public interface IUserDao extends Dao<User> {
     Optional<User> findByUsernameOrEmail(String username, String email);
+
     Boolean existsByUsername(String username);
+
     Boolean existsByEmail(String email);
 
-    User  getCurrentUser();
+    Optional<User> findUserByEmail(String email);
+
+    User getCurrentUser();
 }
