@@ -3,7 +3,9 @@ package com.example.phonecontacts.dao.services;
 import com.example.phonecontacts.dao.repositories.ContactRepository;
 import com.example.phonecontacts.dao.repositories.UserRepository;
 import com.example.phonecontacts.entities.Contact;
+import com.example.phonecontacts.entities.Image;
 import com.example.phonecontacts.exceptions.DuplicateException;
+import com.example.phonecontacts.exceptions.IllegalImageFormatException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -15,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.phonecontacts.constants.TestConstants.getTestContact;
+import static com.example.phonecontacts.constants.TestConstants.*;
 import static com.example.phonecontacts.constants.TestConstants.getTestUser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,17 +48,20 @@ class ContactServiceTest {
     @Test
     void createTest() {
         setUpAuthentication();
-        when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.empty());
+        Contact contact = getTestContact();
+        contact.setImage(getTestImage());
+        contact.getImage().setName("test.png");
+        when(contactRepository.findByName(contact.getName())).thenReturn(Optional.empty());
         when(contactRepository.findAll()).thenReturn(Collections.emptyList());
-        when(contactRepository.save(getTestContact())).thenReturn(getTestContact());
-        assertEquals(getTestContact(), contactService.create(getTestContact()));
+        when(contactRepository.save(contact)).thenReturn(contact);
+        assertEquals(contact, contactService.create(contact));
     }
 
     @Test
     void createBadTest() {
         setUpAuthentication();
         Contact contact = getTestContact();
-        contact.setName("Andrew");
+        contact.setId(2L);
         when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.empty());
         when(contactRepository.findAllByUser(getTestUser())).thenReturn(List.of(contact));
         assertThrows(DuplicateException.class, () -> contactService.create(getTestContact()));
@@ -65,6 +70,8 @@ class ContactServiceTest {
         when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.of(getTestContact()));
         contact.setPhones(Collections.emptySet());
         assertThrows(IllegalArgumentException.class, () -> contactService.create(getTestContact()));
+        contact.setImage(getTestImage());
+        assertThrows(IllegalImageFormatException.class, () -> contactService.create(contact));
     }
 
 
@@ -72,8 +79,6 @@ class ContactServiceTest {
     void updateTest() {
         setUpAuthentication();
         when(contactRepository.findAllByUser(getTestUser())).thenReturn(List.of(getTestContact()));
-
-//        when(contactRepository.findAll()).thenReturn(List.of(getTestContact()));
         when(contactRepository.findById(getTestContact().getId())).thenReturn(Optional.of(getTestContact()));
         when(contactRepository.existsContactByUser(getTestUser())).thenReturn(true);
         when(contactRepository.findAll()).thenReturn(Collections.emptyList());
@@ -85,16 +90,24 @@ class ContactServiceTest {
     void updateBadTest() {
         setUpAuthentication();
         Contact contact = getTestContact();
-        contact.setName("Andrew");
+        contact.setId(2L);
         when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.of(getTestContact()));
         when(contactRepository.existsContactByUser(getTestUser())).thenReturn(true);
+
         when(contactRepository.findAllByUser(getTestUser())).thenReturn(List.of(contact));
-        assertThrows(DuplicateException.class, () -> contactService.update(getTestContact(), getTestContact().getId()));
+        assertThrows(DuplicateException.class, () -> contactService.update(getTestContact(), getTestUser().getId()));
+
         contact.setEmails(Collections.emptySet());
-        assertThrows(DuplicateException.class, () -> contactService.update(getTestContact(), getTestContact().getId()));
-        when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.empty());
+        assertThrows(DuplicateException.class, () -> contactService.update(getTestContact(), getTestUser().getId()));
+
         contact.setPhones(Collections.emptySet());
-        assertThrows(IllegalArgumentException.class, () -> contactService.update(getTestContact(), 0L));
+        contact.setImage(getTestImage());
+        contact.setId(1L);
+        assertThrows(IllegalImageFormatException.class, () -> contactService.update(contact,getTestUser().getId()));
+
+        when(contactRepository.findByName(getTestContact().getName())).thenReturn(Optional.empty());
+        when(contactRepository.existsContactByUser(getTestUser())).thenReturn(false);
+        assertThrows(IllegalArgumentException.class, () -> contactService.update(getTestContact(), getTestUser().getId()));
     }
 
     @Test

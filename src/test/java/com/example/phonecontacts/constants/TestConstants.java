@@ -3,10 +3,7 @@ package com.example.phonecontacts.constants;
 import com.example.phonecontacts.dto.ContactDto;
 import com.example.phonecontacts.dto.LoginDto;
 import com.example.phonecontacts.dto.SignUpDto;
-import com.example.phonecontacts.entities.Contact;
-import com.example.phonecontacts.entities.ContactEmail;
-import com.example.phonecontacts.entities.ContactPhoneNumber;
-import com.example.phonecontacts.entities.User;
+import com.example.phonecontacts.entities.*;
 
 import java.util.Set;
 
@@ -30,6 +27,15 @@ public final class TestConstants {
                 .emails(Set.of(new ContactEmail("xxx@xxx.com"), new ContactEmail("yyy@yyy.com")))
                 .id(1L)
                 .user(getTestUser())
+                .build();
+    }
+
+    public static Image  getTestImage(){
+
+        return Image.builder()
+                .id(1L)
+                .name("test.test")
+                .imageBytes(new byte[0])
                 .build();
     }
 
