@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,15 +29,15 @@ public class ContactController {
     }
 
     @PostMapping
-    public ResponseEntity<Contact> createContact(@RequestBody ContactDto contactDto) {
+    public ResponseEntity<Contact> createContact(@RequestParam(value = "image",required = false) MultipartFile image, ContactDto contactDto) {
         return new ResponseEntity<>(dao.create(convertDtoContact(contactDto,
-                userDao.getCurrentUser())), HttpStatus.OK);
+                userDao.getCurrentUser(), image)), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Contact> updateContact(@RequestBody ContactDto contactDto,@PathVariable Long id) {
+    public ResponseEntity<Contact> updateContact(@RequestParam(value = "image",required = false) MultipartFile image, ContactDto contactDto, @PathVariable Long id) {
         return new ResponseEntity<>(dao.update(convertDtoContact(contactDto,
-                userDao.getCurrentUser()),id), HttpStatus.OK);
+                        userDao.getCurrentUser(),image), id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -7,6 +7,7 @@ import com.example.phonecontacts.entities.Contact;
 import com.example.phonecontacts.entities.ContactEmail;
 import com.example.phonecontacts.entities.ContactPhoneNumber;
 import com.example.phonecontacts.exceptions.DuplicateException;
+import com.example.phonecontacts.exceptions.IllegalImageFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +32,7 @@ public class ContactService implements IContactDao {
         Optional<Contact> contactOptional = contactRepository.findByName(entity.getName());
         List<Contact> contacts = findAll();
 
-        if (areEmailDuplicates(contacts, entity)) {
-            throw new DuplicateException("Duplicate email");
-        }
-
-        if (arePhoneNumbersDuplicates(contacts, entity)) {
-            throw new DuplicateException("Duplicate phone number");
-        }
-
+        checkContactForValidity(contacts, entity);
         if (contactOptional.isEmpty()) {
             return contactRepository.save(entity);
         } else {
@@ -53,18 +47,13 @@ public class ContactService implements IContactDao {
         if (contactOptional.isPresent() &&
                 contactRepository.existsContactByUser(userDao.getCurrentUser())) {
             List<Contact> contacts = findAll();
-
-            if (areEmailDuplicates(contacts, entity)) {
-                throw new DuplicateException("Duplicate email");
-            }
-
-            if (arePhoneNumbersDuplicates(contacts, entity)) {
-                throw new DuplicateException("Duplicate phone number");
-            }
+            entity.setId(entityID);
+            checkContactForValidity(contacts, entity);
 
             Contact target = contactOptional.get();
             target.setUser(entity.getUser());
             target.setName(entity.getName());
+            target.setImage(entity.getImage());
             target.setEmails(entity.getEmails());
             target.setPhones(entity.getPhones());
 
@@ -108,7 +97,7 @@ public class ContactService implements IContactDao {
             for (ContactEmail email :
                     target.getEmails()) {
                 if (contact.getEmails().contains(email) &&
-                        !contact.getName().equals(target.getName())) {
+                        !contact.getId().equals(target.getId())) {
                     return true;
                 }
             }
@@ -123,9 +112,37 @@ public class ContactService implements IContactDao {
             for (ContactPhoneNumber phoneNumber :
                     target.getPhones()) {
                 if (contact.getPhones().contains(phoneNumber) &&
-                        !contact.getName().equals(target.getName())) {
+                        !contact.getId().equals(target.getId())) {
                     return true;
                 }
+            }
+        }
+
+        return false;
+    }
+
+
+    private void checkContactForValidity(List<Contact> contacts, Contact entity) {
+
+        if (areEmailDuplicates(contacts, entity)) {
+            throw new DuplicateException("Duplicate email");
+        }
+
+        if (arePhoneNumbersDuplicates(contacts, entity)) {
+            throw new DuplicateException("Duplicate phone number");
+        }
+
+        if (entity.getImage() != null && !isImageFormat(entity.getImage().getName())) {
+            throw new IllegalImageFormatException("Incorrect image format");
+        }
+    }
+
+    private boolean isImageFormat(String fileName) {
+        String[] availableFormats = {"png", "jpg", "jpeg"};
+        for (String format :
+                availableFormats) {
+            if (fileName.endsWith(format)) {
+                return true;
             }
         }
 

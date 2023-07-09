@@ -31,6 +31,10 @@ public class Contact {
     @JsonIgnore
     private User user;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private Image image;
+
     @ElementCollection
     @CollectionTable(name = "contact_emails", joinColumns = @JoinColumn(name = "contact_id"))
     private Set<@Valid ContactEmail> emails;
