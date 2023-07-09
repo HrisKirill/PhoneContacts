@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>PhoneContacts</name>
     <description>PhoneContacts</description>
+    <packaging>jar</packaging>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -63,6 +64,10 @@
             <version>2.1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
 
     </dependencies>
 

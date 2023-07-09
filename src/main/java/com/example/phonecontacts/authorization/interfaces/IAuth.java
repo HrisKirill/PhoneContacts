@@ -8,4 +8,7 @@ public interface IAuth {
     String login(LoginDto loginDto);
 
     String register(SignUpDto registerDto);
+
+    String confirmEmail(String confirmationToken);
+
 }

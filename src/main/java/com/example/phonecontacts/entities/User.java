@@ -30,6 +30,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private boolean isEnabled;
+
     @OneToMany(mappedBy = "user")
     private Set<Contact> contacts;
 
