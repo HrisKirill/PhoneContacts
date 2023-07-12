@@ -3,7 +3,6 @@ package com.example.phonecontacts.dao.services;
 import com.example.phonecontacts.dao.repositories.ContactRepository;
 import com.example.phonecontacts.dao.repositories.UserRepository;
 import com.example.phonecontacts.entities.Contact;
-import com.example.phonecontacts.entities.Image;
 import com.example.phonecontacts.exceptions.DuplicateException;
 import com.example.phonecontacts.exceptions.IllegalImageFormatException;
 import org.junit.jupiter.api.BeforeEach;

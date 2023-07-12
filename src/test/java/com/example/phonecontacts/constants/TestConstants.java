@@ -5,7 +5,10 @@ import com.example.phonecontacts.dto.LoginDto;
 import com.example.phonecontacts.dto.SignUpDto;
 import com.example.phonecontacts.entities.*;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Set;
+import java.util.UUID;
 
 public final class TestConstants {
     public static User getTestUser() {
@@ -16,6 +19,7 @@ public final class TestConstants {
                 .userName("Test")
                 .email("test@email.com")
                 .password("test")
+                .isEnabled(true)
                 .build();
     }
 
@@ -53,5 +57,14 @@ public final class TestConstants {
 
     public static SignUpDto getSignupDto() {
         return new SignUpDto("Test", "test", "test@test.com", "test");
+    }
+
+    public static ConfirmationToken getTestToken(){
+        return ConfirmationToken.builder()
+                .id(1L)
+                .user(getTestUser())
+                .createdDate(Date.valueOf(LocalDate.now()))
+                .confirmationToken("123456789")
+                .build();
     }
 }
